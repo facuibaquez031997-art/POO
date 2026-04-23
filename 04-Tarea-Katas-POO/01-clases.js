@@ -10,38 +10,70 @@
 
 // Kata 1: Contador
 class Contador {
-  constructor() {}
+  constructor() {
+    this.contador = 0;
+  }
 
-  incrementar() {}
+  incrementar() {
+    this.contador++;
+  }
 
-  decrementar() {}
+  decrementar() {
+    this.contador--;
+  }
 
-  reset() {}
+  reset() {
+    this.contador = 0;
+  }
 }
 
 // Kata 2: Calculadora
 class Calculadora {
-  sumar(a, b) {}
+  sumar(a, b) {
+    this.resultado = a + b;
+    return this.resultado;
+  }
 
-  restar(a, b) {}
+  restar(a, b) {
+    this.resta = a - b;
+    return this.resta;
+  }
 
-  multiplicar(a, b) {}
+  multiplicar(a, b) {
+    this.multiplicar = a * b;
+    return this.multiplicar;
+  }
 
-  dividir(a, b) {}
+  dividir(a, b) {
+    this.dividir = a / b;
+    return this.dividir;
+  }
 }
 
 // Kata 3: Validador
 class Validador {
-  esEmail(valor) {}
+  esEmail(valor) {
+    this.valor = valor;
+    return this.valor.includes("@");
+  }
 
-  esPasswordFuerte(valor) {}
+  esPasswordFuerte(valor) {
+    this.esPasswordFuerte = valor;
+    return this.esPasswordFuerte.length >= 8;
+  }
 }
 
 // Kata 4: Conversor
 class Conversor {
-  celsiusAFahrenheit(celsius) {}
+  celsiusAFahrenheit(celsius) {
+    this.celsius= celsius;
+    return (this.celsius * 9) / 5 + 32;
+  }
 
-  kmAMillas(km) {}
+  kmAMillas(km) {
+    this.km = km;
+    return this.km * 0.621371;
+  }
 }
 
 // Kata 5: Generador
@@ -57,24 +89,40 @@ class Generador {
 class CuentaBancaria {
   #saldo;
 
-  constructor(saldoInicial = 0) {}
+  constructor(saldoInicial = 0) {
+    this.#saldo = saldoInicial;
+  }
 
-  depositar(cantidad) {}
+  depositar(cantidad) {
+    this.#saldo += cantidad;
+  }
 
-  retirar(cantidad) {}
+  retirar(cantidad) {
+    if (cantidad <= this.#saldo) {
+      this.#saldo -= cantidad;
+    }
+    }
 
-  get saldo() {}
-}
+  get saldo() {
+    return this.#saldo;
+  }
+};
 
 // Kata 8: Termostato
 class Termostato {
   #temperatura;
 
-  constructor(temperaturaInicial = 20) {}
+  constructor(temperaturaInicial = 20) {
+    this.#temperatura = temperaturaInicial;
+  }
 
-  get temperatura() {}
+  get temperatura() {
+    return this.#temperatura;
+  }
 
-  set temperatura(valor) {}
+  set temperatura(valor) {
+    this.#temperatura = valor;
+  }
 }
 
 // Kata 9: Reloj
@@ -82,13 +130,28 @@ class Reloj {
   #hora;
   #minuto;
 
-  constructor(hora = 0, minuto = 0) {}
+  constructor(hora = 0, minuto = 0) {
+    this.#hora = hora;
+    this.#minuto = minuto;
+  }
 
-  avanzarMinuto() {}
+  avanzarMinuto() {
+    this.#minuto++;
+    if (this.#minuto >= 60) {
+      this.#minuto = 0;
+      this.#hora++;
+    } else if (this.#hora >= 24) {
+      this.#hora = 0;
+    };
+  };
 
-  get hora() {}
+  get hora() {
+    return this.#hora;
+  }
 
-  get minuto() {}
+  get minuto() {
+    return this.#minuto;
+  }
 }
 
 // Kata 10: CajaFuerte
@@ -96,10 +159,19 @@ class CajaFuerte {
   #password;
   #secreto;
 
-  constructor(password, secreto) {}
+  constructor(password, secreto) {
+    this.#password = password;
+    this.#secreto = secreto;
+  }
 
-  abrir(intento) {}
-}
+  abrir(intento) {
+    if (intento === this.#password) {
+      return this.#secreto;
+    } else {
+      return "Acceso Denegado";
+    };
+  };
+};
 
 // ─────────────────────────────────────────────
 // ESTRUCTURAS DE DATOS: PILA / STACK - LIFO (Katas 11-15)
@@ -109,15 +181,25 @@ class CajaFuerte {
 class Pila {
   #items;
 
-  constructor() {}
+  constructor() {
+    this.#items = [];
+  }
 
-  apilar(elemento) {}
+  apilar(elemento) {
+    this.#items.push(elemento);
+  }
 
-  desapilar() {}
+  desapilar() {
+    this.#items.pop();
+  }
 
-  verTope() {}
+  verTope() {
+    return this.#items[this.#items.length - 1];
+  }
 
-  estaVacia() {}
+  estaVacia() {
+    return this.#items.length === 0;
+  }
 }
 
 // ─────────────────────────────────────────────
@@ -128,16 +210,26 @@ class Pila {
 class Cola {
   #elementos;
 
-  constructor() {}
+  constructor() {
+    this.#elementos = [];
+  }
 
-  encolar(elemento) {}
+  encolar(elemento) {
+    this.#elementos.push(elemento);
+  }
 
-  desencolar() {}
+  desencolar() {
+    return this.#elementos.shift();
+  }
 
-  frente() {}
+  frente() {
+    return this.#elementos[0];
+  }
 
-  tamano() {}
-}
+  tamano() {
+    return this.#elementos.length;
+  }
+};
 
 module.exports = {
   Contador,
