@@ -10,14 +10,21 @@
 
 // Kata 21: Usuario
 class Usuario {
-  constructor(nombre, email) {}
+  constructor(nombre, email) {
+    this.nombre = nombre;
+    this.email = email;
+  }
 }
 
 // Kata 22: Admin
 class Admin extends Usuario {
-  constructor(nombre, email) {}
+  constructor(nombre, email) {
+    super(nombre,email);
+  }
 
-  banearUsuario(usuario) {}
+  banearUsuario(usuario) {
+    return `El usuario ${usuario.nombre} fue baneado por ${this.nombre}`;
+  };
 }
 
 // Kata 23: Suscripcion
@@ -25,31 +32,51 @@ class Suscripcion {
   #plan;
   #vencimiento;
 
-  constructor(plan, vencimiento) {}
+  constructor(plan, vencimiento) {
+    this.#plan = plan;
+    this.#vencimiento = vencimiento;
+  }
 
-  renovar(diasExtra) {}
+  renovar(diasExtra) {
+    this.#vencimiento += diasExtra;
+  }
 
-  get plan() {}
+  get plan() {
+   return this.#plan;
+  }
 
-  get vencimiento() {}
+  get vencimiento() {
+    return this.#vencimiento;
+  }
 }
 
 // Kata 24: Perfil
 class Perfil {
-  constructor(datos) {}
+  constructor(datos) {
+    this.datos = datos;
+  }
 
-  actualizarDatos(nuevosDatos) {}
+  actualizarDatos(nuevosDatos) {
+    this.datos = {...this.datos, ...nuevosDatos};
+  }
 }
 
 // Kata 25: Auth
 class Auth {
   #usuarios;
 
-  constructor() {}
+  constructor() {
+    this.#usuarios = [];
+  }
 
-  registrar(nombre, email, password) {}
+  registrar(nombre, email, password) {
+    this.#usuarios.push({nombre, email, password});
+  }
 
-  login(email, password) {}
+  login(email, password) {
+    const usuario = this.#usuarios.find(u => u.email === email && u.password === password);
+    return usuario ? "Login exitoso" : "Credenciales inválidas";
+  }
 }
 
 // ─────────────────────────────────────────────
@@ -58,36 +85,64 @@ class Auth {
 
 // Kata 26 y 28: Personaje
 class Personaje {
-  constructor(nombre, hp, ataque) {}
+  constructor(nombre, hp, ataque) {
+    this.nombre = nombre;
+    this.hp = hp;
+    this.ataque = ataque;
+  }
 
-  atacar(objetivo) {}
+  atacar(objetivo) {
+    this.objetivo = objetivo;
+    this.objetivo.hp -= this.ataque;
+  }
 }
 
 // Kata 27: Enemigo
 class Enemigo {
   #loot;
 
-  constructor(nombre, hp, ataque, loot) {}
+  constructor(nombre, hp, ataque, loot) {
+    this.nombre = nombre;
+    this.hp = hp;
+    this.ataque = ataque;
+    this.#loot = loot;
+  }
 
-  atacar(objetivo) {}
+  atacar(objetivo) {
+    objetivo.hp -= this.ataque;
+  }
 
-  morir() {}
+  morir() {
+    return this.#loot;
+  }
 }
 
 // Kata 29: Inventario
 class Inventario {
-  constructor() {}
+  constructor() {
+    this.item = [];
+  }
 
-  agarrarItem(item) {}
+  agarrarItem(item) {
+    this.item.push(item);
+  }
 
-  usarItem(nombre, personaje) {}
+  usarItem(nombre, personaje) {
+    const item = this.item.find(i => i.nombre === nombre);
+    if (item) item.usar(personaje);
+  }
 }
 
 // Kata 30: Pocion
 class Pocion {
-  constructor(nombre, cantidad) {}
+  constructor(nombre, cantidad) {
+    this.nombre = nombre;
+    this.cantidad = cantidad;
+  }
 
-  usar(personaje) {}
+  usar(personaje) {
+    personaje.hp += this.cantidad;
+  }
 }
 
 // ─────────────────────────────────────────────
@@ -96,9 +151,18 @@ class Pocion {
 
 // Kata 31 y 32: Producto
 class Producto {
-  constructor(id, nombre, precio, stock) {}
+  constructor(id, nombre, precio, stock) {
+    this.id = id;
+    this.nombre = nombre;
+    this.precio = precio;
+    this.stock = stock;
+  }
 
-  vender(cantidad) {}
+  vender(cantidad) {
+    if (this.stock >= cantidad) {
+      this.stock -= cantidad;
+    }
+  }
 }
 
 // Katas 33-35: Carrito
@@ -106,15 +170,35 @@ class Carrito {
   #productos;
   #descuento;
 
-  constructor() {}
+  constructor() {
+    this.#productos = [];
+    this.#descuento = 0;
+  }
 
-  agregar(producto, cantidad = 1) {}
+  agregar(producto, cantidad = 1) {
+    this.#productos.push({producto, cantidad});
+  }
 
-  calcularTotal() {}
+  calcularTotal() {
+    return this.#productos.reduce((total, item) => total + item.producto.precio * item.cantidad,0) * (1 - this.#descuento);
+  }
 
-  aplicarCupon(codigo) {}
 
-  get productos() {}
+  aplicarCupon(codigo) {
+    this.codigo = codigo;
+    if (this.codigo === "DESCUENTO10") {
+      this.#descuento = 0.10;
+    } else if (this.codigo === "DESCUENTO20") {
+      this.#descuento = 0.20;
+    } else {
+      this.#descuento = 0;
+    }
+
+  }
+
+  get productos() {
+    return this.#productos;
+  }
 }
 
 // ─────────────────────────────────────────────
@@ -123,33 +207,57 @@ class Carrito {
 
 // Kata 36: Mesa
 class Mesa {
-  constructor(numero, capacidad) {}
+  constructor(numero, capacidad) {
+    this.numero = numero;
+    this.capacidad = capacidad;
+  }
 }
 
 // Katas 37 y 38: Pedido
 class Pedido {
   #platos;
 
-  constructor(mesa) {}
+  constructor(mesa) {
+    this.mesa = mesa;
+    this.#platos = [];
+  }
 
-  agregarPlato(nombre, precio) {}
+  agregarPlato(nombre, precio) {
+    this.#platos.push({nombre, precio});
+  }
 
-  cerrarMesa() {}
+  cerrarMesa() {
+    return this.#platos.reduce((total, plato) => total + plato.precio,0);
+  }
 
-  get platos() {}
+  get platos() {
+    return this.#platos;
+  }
 }
 
 // Katas 39 y 40: Restaurante
 class Restaurante {
-  constructor() {}
+  constructor() {
+    this.restaurante = [];
+  }
 
-  agregarMesa(mesa) {}
+  agregarMesa(mesa) {
+    this.restaurante.push({mesa});
+  }
 
-  buscarMesaLibre(comensales) {}
+  buscarMesaLibre(comensales) {
+    this.comensales = comensales;
+    return this.restaurante.find(m => m.mesa.capacidad >= this.comensales);
+  }
 
-  cerrarCuenta(total) {}
+  cerrarCuenta(total) {
+    this.total = total;
+    return `El total a pagar es: ${this.total}`;
+  }
 
-  recaudacionDelDia() {}
+  recaudacionDelDia() {
+    return this.recaudacionDelDia = this.restaurante.reduce((total, m) => total + m.total(), 0);
+  }
 }
 
 module.exports = {
