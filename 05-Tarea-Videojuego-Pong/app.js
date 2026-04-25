@@ -36,21 +36,33 @@ class Paleta {
   constructor(x, y, ancho, alto, color) {
     // Asigna los parámetros a las propiedades 'this'
     // TU CÓDIGO AQUÍ 👇
+    this.x = x;
+    this.y = y;
+    this.ancho = ancho;
+    this.alto = alto;
+    this.color = color;
 
     this.velocidad = 6; // Velocidad fija
-  }
+  };
 
   dibujar() {
     // Usa ctx.fillStyle y ctx.fillRect para dibujar la paleta usando 'this'
     // TU CÓDIGO AQUÍ 👇
-  }
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x, this.y, this.ancho, this.alto);
+  };
 
   mover(teclaArriba, teclaAbajo) {
     // 1. Si la 'teclaArriba' es true y la paleta no se sale del techo (this.y > 0), resta velocidad a this.y
     // 2. Si la 'teclaAbajo' es true y no se sale del piso (this.y + this.alto < canvas.height), suma velocidad.
     // TU CÓDIGO AQUÍ 👇
-  }
-}
+    if (teclaArriba === true && this.y > 0) {
+      this.y -= this.velocidad;
+    } else if (teclaAbajo === true && this.y + this.alto < canvas.height) {
+      this.y += this.velocidad;
+    };
+  };
+};
 
 // =====================================================================
 // 📝 RETO 2: CREAR LA CLASE PELOTA
@@ -58,6 +70,10 @@ class Paleta {
 class Pelota {
   constructor(x, y, radio, color) {
     // TU CÓDIGO AQUÍ 👇
+    this.x = x;
+    this.y = y;
+    this.radio = radio;
+    this.color = color;
 
     // La pelota se mueve en ambas direcciones (X e Y)
     this.velX = 4;
@@ -78,8 +94,14 @@ class Pelota {
     // TU CÓDIGO AQUÍ 👇
     // 2. Rebote en Techo y Piso: Si this.y toca el 0 o toca canvas.height, INVIERTE la velY (multiplica por -1)
     // TU CÓDIGO AQUÍ 👇
-  }
-}
+    this.x += this.velX;
+    this.y += this.velY;
+
+    if (this.y - this.radio < 0 || this.y + this.radio > canvas.height) {
+      this.velY *= -1;
+    };
+  };
+};
 
 // =====================================================================
 // 📝 RETO 3: INSTANCIAR LOS OBJETOS
@@ -88,6 +110,9 @@ class Pelota {
 // Ej: const jugador1 = new Paleta(10, 150, 20, 100, "white");
 
 // TU CÓDIGO AQUÍ 👇
+const jugador1= new Paleta(10, 10, 20, 100, "blue");
+const jugador2 = new Paleta(canvas.width -30, 10, 20 ,100, "blue");
+const pelota = new Pelota(canvas.width / 2, canvas.height / 2, 15, "blue");
 
 // =====================================================================
 // 📝 RETO FINAL: EL GAME LOOP Y LAS COLISIONES
@@ -95,12 +120,16 @@ class Pelota {
 function gameLoop() {
   // 1. Limpiar el lienzo (clearRect)
   // TU CÓDIGO AQUÍ 👇
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // 2. Mover los objetos
   // Llama a jugador1.mover() pasándole las teclas correctas: teclas.w, teclas.s
   // Llama a jugador2.mover() pasándole teclas.ArrowUp, teclas.ArrowDown
   // Llama a pelota.mover()
   // TU CÓDIGO AQUÍ 👇
+  jugador1.mover(teclas.w, teclas.s);
+  jugador2.mover(teclas.ArrowUp, teclas.ArrowDown);
+  pelota.mover();
 
   // 3. Colisiones Paleta vs Pelota (Lógica AABB simplificada)
   // AYUDA: Si la pelota cruza la posición X de la paleta, y su posición Y está entre la parte superior e inferior de la paleta, rebota (invierte velX).
@@ -123,8 +152,27 @@ function gameLoop() {
     pelota.velX *= -1;
   }
 
+  // Suma punto para score1 y resetea la posición de la pelota.
+  if (pelota.x + pelota.radio > canvas.width) {
+    scoreP1++;
+    score1DOM.textContent = scoreP1;
+    pelota.x = canvas.width / 2;
+    pelota.y = canvas.height / 2;
+  };
+  
+  //suma punto para score2 y resetea la posición de la pelota.
+  if (pelota.x - pelota.radio < 0) {
+    scoreP2++;
+    score2DOM.textContent = scoreP2;
+    pelota.x = canvas.width / 2;
+    pelota.y = canvas.height / 2;
+  }
+
   // 4. Dibujar los objetos (Llamar al método .dibujar() de los 3)
   // TU CÓDIGO AQUÍ 👇
+  jugador1.dibujar();
+  jugador2.dibujar();
+  pelota.dibujar();
 
   // 5. Motor recursivo
   requestAnimationFrame(gameLoop);
